@@ -8,15 +8,17 @@ export const Home = () => {
     const [membersListModal, setMembersListModal] = useState(memberData)
     const [membersList, setMembersList] = useState([])
 
-    const [ selectedMember, setSelectedMember ] = useState()
+    const [ selectedMember, setSelectedMember ] = useState([])
 
     const addMember = () =>{
-        let data = membersListModal.filter((m)=>m.id===selectedMember)
-        let data1 = membersListModal.filter((m)=>m.id!==selectedMember)
-        setMembersList([...membersList,data[0]])
+        let data = membersListModal.filter((m)=>selectedMember.includes(m.id))
+        let data1 = membersListModal.filter((m)=>!selectedMember.includes(m.id))
+        setMembersList([...membersList,...data].sort((a,b)=>a.id-b.id))
         setMembersListModal(data1)
-        setSelectedMember()
+        setSelectedMember([])
     }
+
+    console.log(selectedMember)
 
     return (
         <div className='m-5'>
@@ -39,7 +41,7 @@ export const Home = () => {
                                 </div>
                             </div>
                             <div className="modal-footer text-center">
-                                <button type="button" className="btn btn-primary" disabled={selectedMember? "": "disabled"} onClick={addMember}>Add Member</button>
+                                <button type="button" className="btn btn-primary" disabled={selectedMember.length>0? "": "disabled"} onClick={addMember}>Add Member</button>
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
@@ -47,7 +49,7 @@ export const Home = () => {
                 </div>
 
                 <div className='m-4 d-flex flex-wrap justify-content-center gap-3'>
-                    {membersList.map((member) => <Card member={member} />)}
+                    {membersList.map((member) => <Card key={member.id} member={member} />)}
                 </div>
 
             </div>
